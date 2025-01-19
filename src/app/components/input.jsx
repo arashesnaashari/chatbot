@@ -1,57 +1,63 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import Link from "next/link";
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const newMessages = [...messages, { sender: 'user', text: input }];
+    const newMessages = [...messages, { sender: "user", text: input }];
     setMessages(newMessages);
-    setInput('');
+    setInput("");
 
     try {
-      console.log("Start")
-      const response = await fetch('/api', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      console.log("Start");
+      const response = await fetch("/api", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
       });
 
       const data = await response.json();
-      console.log("data")
-      console.log(data)
+      console.log("data");
+      console.log(data);
       if (data.error) {
         throw new Error(data.error);
       }
 
       setMessages([
         ...newMessages,
-        { sender: 'bot', text: data.choices[0].message.content },
+        { sender: "bot", text: data.choices[0].message.content },
       ]);
     } catch (error) {
       setMessages([
         ...newMessages,
-        { sender: 'bot', text: 'Error: Unable to connect to the server.' },
+        { sender: "bot", text: "Error: Unable to connect to the server." },
       ]);
     }
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center bg-gradient-to-b from-blue-600 to-blue-400">
+    <div className="relative min-h-screen flex flex-col items-center">
       {/* Background */}
-      <div className="absolute inset-0 z-0">
+      <div className="flex flex-row w-full p-6">
+        <div className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center space-x-2 shadow-lg">
+          <Link href={"/signup"}>Sign Up</Link>
+        </div>
+      </div>
+      {/* <div>
         <img
           src="/image.jpg" // Replace with your travel background image path
           alt="Travel Background"
           className="w-full h-full object-cover opacity-100"
         />
-      </div>
+      </div> */}
 
       {/* Header */}
       <header className="relative z-10 mt-2 bg-white bg-opacity-40 backdrop-blur-md shadow-md rounded-full px-10 py-2 text-center">
@@ -61,24 +67,22 @@ const Chatbot = () => {
 
       {/* Chat Container */}
       <main className="relative z-10 mt-2 flex flex-col items-center w-full max-w-5xl bg-gray-50/30 backdrop-blur-md shadow-lg rounded-lg p-6">
-        <div
-          className="flex flex-col gap-3 w-full h-[29rem] overflow-y-auto bg-gray-50/0 backdrop-blur-md p-4 rounded-lg border border-gray-300"
-        >
+        <div className="flex flex-col gap-3 w-full h-[29rem] overflow-y-auto bg-gray-50/0 backdrop-blur-md p-4 rounded-lg border border-gray-300">
           {messages.map((msg, index) => (
             <div
               key={index}
               className={`mb-3 flex ${
-                msg.sender === 'user' ? 'justify-end' : 'justify-start'
+                msg.sender === "user" ? "justify-end" : "justify-start"
               }`}
             >
               <div
                 className={`${
-                  msg.sender === 'user'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-white bg-opacity-80 backdrop-blur-sm text-gray-800'
+                  msg.sender === "user"
+                    ? "bg-blue-500 text-white"
+                    : "bg-white bg-opacity-80 backdrop-blur-sm text-gray-800"
                 } p-4 rounded-lg max-w-xl shadow-md`}
               >
-                {msg.sender === 'bot' ? (
+                {msg.sender === "bot" ? (
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
                     {msg.text}
                   </ReactMarkdown>
