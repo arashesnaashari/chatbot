@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +22,7 @@ const Signup = () => {
       window.location.href = "/login";
     } else {
       const error = await res.json();
-      alert(error.message);
+      alert(error.error);
     }
   };
 
@@ -43,13 +41,16 @@ const Signup = () => {
       </header>
 
       {/* Chat Container */}
-      <main className="relative z-10 mt-2 flex flex-col items-center w-full max-w-5xl bg-gray-50/30 backdrop-blur-md shadow-lg rounded-lg p-6">
+      <main
+        style={{ direction: "rtl" }}
+        className="relative z-10 mt-2 flex flex-col items-center w-full max-w-5xl bg-gray-50/30 backdrop-blur-md shadow-lg rounded-lg p-6"
+      >
         <div className="flex flex-col gap-3 w-full h-[29rem] overflow-y-auto bg-gray-50/0 backdrop-blur-md p-4 rounded-lg border border-gray-300">
           <form className="p-6 rounded-lg " onSubmit={handleSubmit}>
-            <h1 className="text-lg font-bold mb-4">Sign Up</h1>
+            <h1 className="text-lg font-bold mb-4"> ایجاد حساب کاربری</h1>
             <input
               type="text"
-              placeholder="Username"
+              placeholder="نام کاربری"
               className="w-full p-2 border rounded mb-2"
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
@@ -57,7 +58,7 @@ const Signup = () => {
             />
             <input
               type="email"
-              placeholder="Email"
+              placeholder="ایمیل"
               className="w-full p-2 border rounded mb-2"
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
@@ -65,15 +66,21 @@ const Signup = () => {
             />
             <input
               type="password"
-              placeholder="Password"
+              placeholder="رمز عبور"
               className="w-full p-2 border rounded mb-2"
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
             />
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">
-              Sign Up
-            </button>
+            <div>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded">
+                ایجاد حساب کاربری
+              </button>
+              <Link className="mr-3 text-blue-600 underline" href={"/login"}>
+                {" "}
+                ورود
+              </Link>
+            </div>
           </form>
         </div>
       </main>

@@ -4,11 +4,14 @@ import Link from "next/link";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-const Chatbot = () => {
+const Chatbot = ({ props }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
+  const router = useRouter();
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -46,10 +49,25 @@ const Chatbot = () => {
   return (
     <div className="relative min-h-screen flex flex-col items-center">
       {/* Background */}
-      <div className="flex flex-row w-full p-6">
-        <div className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center space-x-2 shadow-lg">
-          <Link href={"/signup"}>Sign Up</Link>
-        </div>
+      <div className="flex flex-row justify-end w-full p-6">
+        {props ? (
+          <div className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center space-x-2 shadow-lg">
+            <Link href={"/login"}>
+              {" "}
+              <button
+                onClick={() => {
+                  signOut({ redirect: false });
+                }}
+              >
+                خروج
+              </button>
+            </Link>
+          </div>
+        ) : (
+          <div className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center space-x-2 shadow-lg">
+            <Link href={"/signup"}> ایجاد حساب کاربری</Link>
+          </div>
+        )}
       </div>
       {/* <div>
         <img
