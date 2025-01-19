@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { signIn } from "next-auth/react";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,17 +12,25 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+
+    const res = await signIn("credentials", {
+      email: formData.email,
+      password: formData.password,
+      redirect: false,
     });
+
+    // const res = await fetch("/api/auth/login", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(formData),
+    // });
     if (res.ok) {
       alert("Sign up successful! You can log in now.");
       window.location.href = "/";
     } else {
-      const error = await res.json();
-      alert(error.message);
+      // const error = await res.json();
+      // alert(error.error);
+      alert(res.error);
     }
   };
 
@@ -42,14 +49,17 @@ const Login = () => {
       </header>
 
       {/* Chat Container */}
-      <main className="relative z-10 mt-2 flex flex-col items-center w-full max-w-5xl bg-gray-50/30 backdrop-blur-md shadow-lg rounded-lg p-6">
+      <main
+        style={{ direction: "rtl" }}
+        className="relative z-10 mt-2 flex flex-col items-center w-full max-w-5xl bg-gray-50/30 backdrop-blur-md shadow-lg rounded-lg p-6"
+      >
         <div className="flex flex-col gap-3 w-full h-[29rem] overflow-y-auto bg-gray-50/0 backdrop-blur-md p-4 rounded-lg border border-gray-300">
           <form className="p-6 rounded-lg " onSubmit={handleSubmit}>
-            <h1 className="text-lg font-bold mb-4">Login</h1>
+            <h1 className="text-lg font-bold mb-4">ورود</h1>
 
             <input
               type="email"
-              placeholder="Email"
+              placeholder="ایمیل"
               className="w-full p-2 border rounded mb-2"
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
@@ -57,15 +67,20 @@ const Login = () => {
             />
             <input
               type="password"
-              placeholder="Password"
+              placeholder="رمز عبور"
               className="w-full p-2 border rounded mb-2"
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
             />
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">
-              Login
-            </button>
+            <div>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded">
+                ورود
+              </button>
+              <Link className="mr-3 text-blue-600 underline" href={"/signup"}>
+                ایجاد حساب کاربری{" "}
+              </Link>
+            </div>
           </form>
         </div>
       </main>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Provider } from "./provider";
 
 export const metadata: Metadata = {
   title: "سفر آگاه",
@@ -20,7 +21,7 @@ export default function RootLayout({
           backgroundSize: "cover",
         }}
       >
-        {children}
+        <Provider>{children}</Provider>
       </body>
     </html>
   );
